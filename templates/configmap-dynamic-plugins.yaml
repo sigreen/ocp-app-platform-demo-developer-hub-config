@@ -28,14 +28,9 @@ data:
         integrity: 'sha512-buf1Z/mnr+cyMRwqkzsPMVthz+a6UKeOUrmpo+2/44UWBhP482J/eXwnjBAr7j6303o29+DRy4tnNlMu9snGKQ=='
                                                                                                                                                                            
       # Confluence Search Backend Module                                                                                                                                   
-      - package: '@backstage-community/plugin-search-backend-module-confluence-collator'                                                                                   
+      - package: oci://quay.io/rh-ee-sigreen/backstage-plugin-confluence-collator:0.17.2!backstage-plugin-search-backend-module-confluence-collator-wrapper                
         disabled: false                                                                                                                                                    
-        integrity: 'sha512-TFtfon9F8mWeZlfs7wNQDLD/JgU47syy2ca0p5/aPDbMxNK0ZQaWSAl4L0lFflmVF1Tq8YnP29DV0jkWb+OazQ=='
-        pluginConfig:                                                                                                                                                      
-          dynamicPlugins:
-            # Install missing dependency                                                                                                                                   
-            installDependencies:                                                                                                                                           
-              - p-throttle
+
 
       # MCP Server plugins
       - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-plugin-mcp-actions-backend:bs_1.42.5__0.1.2!backstage-plugin-mcp-actions-backend
