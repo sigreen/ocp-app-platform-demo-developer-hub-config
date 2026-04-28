@@ -41,11 +41,49 @@ data:
       - name: mcp::backstage
         token: ${BACKEND_SECRET}
 
+      # RAG (Retrieval-Augmented Generation) Sources
+      rag:
+        enabled: true
+        sources:
+          # Confluence documentation
+          - type: confluence
+            enabled: true
+            spaces:
+              - ES
+              - PLATFORM
+              - ONBOARD
+          
+          # RHDH Catalog entities
+          - type: catalog
+            enabled: true
+            entityKinds:
+              - Component
+              - API
+              - System
+          
+          # TechDocs
+          - type: techdocs
+            enabled: true
+
       # OPTIONAL: Port for lightspeed service (default: 8080)
       # servicePort: ${LIGHTSPEED_SERVICE_PORT}
 
       # OPTIONAL: Override default RHDH system prompt
       # systemPrompt: "You are a helpful assistant focused on Red Hat Developer Hub development."
+
+    search:
+      collators:
+        confluence:
+          # Schedule for indexing Confluence pages
+          schedule:
+            frequency: { hours: 2 }  # Index every 2 hours
+            timeout: { minutes: 10 }
+          
+          # Confluence spaces to index (same as above)
+          spaces:
+            - ES
+            - PLATFORM
+            - ONBOARD
 
     signInPage: oidc
     auth:
