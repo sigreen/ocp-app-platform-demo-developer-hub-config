@@ -9,7 +9,7 @@ metadata:
 data:
   app-config-rhdh.yaml: |
     app:
-      title: Red Hat Developer Hub
+      title: BMO Developer Hub
       baseUrl: https://{{ .Values.backstage.host }}
 
     lightspeed:
