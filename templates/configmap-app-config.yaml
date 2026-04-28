@@ -12,6 +12,24 @@ data:
       title: BMO Developer Hub
       baseUrl: https://{{ .Values.backstage.host }}
 
+    # Confluence Integration
+    confluence:
+      # Your Confluence Cloud base URL (without /wiki)
+      baseUrl: https://simongreen02.atlassian.net/wiki
+      
+      # Authentication
+      auth:
+        # Use your Confluence email and API token
+        # Best practice: Use environment variables, not hardcoded values
+        username: ${CONFLUENCE_EMAIL}
+        password: ${CONFLUENCE_API_TOKEN}
+      
+      # Spaces to index for search (must match your space keys exactly)
+      spaces:
+        - ES                # Engineering Standards
+        - PLATFORM          # Platform Documentation
+        - ONBOARD          # Developer Onboarding
+
     lightspeed:
       # OPTIONAL: Custom users prompts displayed to users
       # If not provided, the plugin uses built-in default prompts
