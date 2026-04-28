@@ -20,11 +20,11 @@ data:
           type: bearer                                                                                                                                                     
           token: ${CONFLUENCE_TOKEN}  
       
-      # Spaces to index for search (must match your space keys exactly)
-      spaces:
-        - ES                # Engineering Standards
-        - PLATFORM          # Platform Documentation
-        - ONBOARD          # Developer Onboarding
+        # Spaces to index for search (must match your space keys exactly)
+        spaces:
+          - ES                # Engineering Standards
+          - PLATFORM          # Platform Documentation
+          - ONBOARD          # Developer Onboarding
 
     lightspeed:
       # OPTIONAL: Custom users prompts displayed to users
