@@ -13,16 +13,12 @@ data:
       baseUrl: https://{{ .Values.backstage.host }}
 
     # Confluence Integration
-    confluence:
-      # Your Confluence Cloud base URL (without /wiki)
-      baseUrl: https://simongreen02.atlassian.net/wiki
-      
-      # Authentication
-      auth:
-        # Use your Confluence email and API token
-        # Best practice: Use environment variables, not hardcoded values
-        username: ${CONFLUENCE_EMAIL}
-        password: ${CONFLUENCE_API_TOKEN}
+    confluence:                                               
+      default:  # Named instance
+        baseUrl: https://simongreen02.atlassian.net/wiki                                                                                                                   
+        auth:                                                                                                                                                              
+          type: bearer                                                                                                                                                     
+          token: ${CONFLUENCE_TOKEN}  
       
       # Spaces to index for search (must match your space keys exactly)
       spaces:
