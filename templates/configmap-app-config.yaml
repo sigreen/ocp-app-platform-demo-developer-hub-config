@@ -16,8 +16,9 @@ data:
     confluence:                                               
       default:  # Named instance
         baseUrl: https://simongreen02.atlassian.net/wiki                                                                                                                   
-        auth:                                                                                                                                                              
-          type: bearer                                                                                                                                                     
+        auth:
+          type: basic
+          username: ${CONFLUENCE_USERNAME}
           token: ${CONFLUENCE_TOKEN}  
       
         # Spaces to index for search (must match your space keys exactly)
