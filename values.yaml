@@ -1,5 +1,51 @@
 backstage:
   host: ""
+  # Use official RHDH image
+  image:
+    registry: registry.redhat.io
+    repository: rhdh/rhdh-hub-rhel9
+    tag: "1.9"
+
+  # Init container to install missing p-throttle dependency
+  initContainers:
+    - name: install-confluence-deps
+      image: registry.redhat.io/rhdh/rhdh-hub-rhel9:1.9
+      command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          PLUGIN_DIR="/dynamic-plugins-root/backstage-community-plugin-search-backend-module-confluence-collator-0.17.2"
+
+          echo "Checking for Confluence plugin..."
+          if [ -d "$PLUGIN_DIR" ]; then
+            echo "Found Confluence plugin at $PLUGIN_DIR"
+            echo "Installing p-throttle dependency..."
+            cd "$PLUGIN_DIR"
+            npm install p-throttle@6.1.0 --legacy-peer-deps --no-save
+
+            # Verify installation
+            if [ -d "node_modules/p-throttle" ]; then
+              echo "✓ p-throttle installed successfully"
+              ls -la node_modules/ | grep p-throttle
+            else
+              echo "✗ ERROR: p-throttle installation failed"
+              exit 1
+            fi
+          else
+            echo "⚠ Warning: Confluence plugin directory not found"
+            echo "   Expected: $PLUGIN_DIR"
+            echo "   Available plugins:"
+            ls -1 /dynamic-plugins-root/ | grep -i confluence || echo "   No Confluence plugins found"
+            echo ""
+            echo "   This is OK if the Confluence plugin is disabled."
+            echo "   Skipping dependency installation."
+          fi
+      volumeMounts:
+        - name: dynamic-plugins-root
+          mountPath: /dynamic-plugins-root
+      securityContext:
+        runAsUser: 0  # Required for npm install
 
 gitlab:
   host: ""
