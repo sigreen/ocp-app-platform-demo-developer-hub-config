@@ -30,6 +30,10 @@ data:
     lightspeed:
       # OPTIONAL: Custom users prompts displayed to users
       # If not provided, the plugin uses built-in default prompts
+      
+      # Disable topic validation to allow questions about Confluence docs and other RAG sources                                                         
+      questionValidation: false      
+      
       prompts:
         - title: Using Lightspeed and MCP
           message: Tell me about the parasol-insurance-api API in the Catalog, and write a sample snippet of Java code to access it.
