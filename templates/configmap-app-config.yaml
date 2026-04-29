@@ -71,12 +71,13 @@ data:
     search:
       collators:
         confluence:
+          instanceKey: default  # Must match the named instance under confluence:
           # Schedule for indexing Confluence pages
           schedule:
             frequency: { hours: 2 }  # Index every 2 hours
             timeout: { minutes: 10 }
             initialDelay: { seconds: 30 }  # Run 30 seconds after startup
-          
+
           # Confluence spaces to index (same as above)
           spaces:
             - ES
