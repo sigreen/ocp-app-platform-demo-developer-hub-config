@@ -40,7 +40,12 @@ spec:
         template:
           spec:
             containers:
-              - envFrom:
+              - env:
+                  - name: VALIDATION_PROVIDER
+                    value: ""
+                  - name: VALIDATION_MODEL_NAME
+                    value: "qwen3-14b"
+                envFrom:
                   - secretRef:
                       name: llama-stack-secrets
                 image: 'quay.io/redhat-ai-dev/llama-stack:0.1.1'
