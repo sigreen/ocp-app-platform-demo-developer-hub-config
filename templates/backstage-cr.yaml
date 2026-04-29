@@ -59,6 +59,9 @@ spec:
                   - mountPath: /app-root/vector_db/rhdh_product_docs
                     name: rag-data-volume
                     subPath: rhdh_product_docs
+                  - mountPath: /app-root/run.yaml
+                    name: llama-stack-run
+                    subPath: run.yaml
               - image: 'quay.io/lightspeed-core/lightspeed-stack:dev-20251021-ee9f08f'
                 name: lightspeed-core
                 volumeMounts:
@@ -89,6 +92,9 @@ spec:
               - configMap:
                   name: lightspeed-stack
                 name: lightspeed-stack
+              - configMap:
+                  name: llama-stack-run
+                name: llama-stack-run
               - emptyDir: {}
                 name: shared-storage
               - emptyDir: {}
