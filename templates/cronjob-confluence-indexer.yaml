@@ -35,12 +35,10 @@ spec:
                   set -e
                   echo "Starting Confluence search indexing at $(date)"
 
-                  # Trigger Confluence indexing
+                  # Trigger Confluence indexing using Backstage Scheduler API
                   RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-                    "http://backstage-developer-hub:7007/api/search/refresh" \
-                    -H "Content-Type: application/json" \
-                    -H "Authorization: Bearer ${BACKEND_SECRET}" \
-                    -d '{"type":"confluence"}')
+                    "http://backstage-developer-hub:7007/api/search/.backstage/scheduler/v1/tasks/search_index_confluence/trigger" \
+                    -H "Authorization: Bearer ${BACKEND_SECRET}")
 
                   HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
                   BODY=$(echo "$RESPONSE" | head -n-1)

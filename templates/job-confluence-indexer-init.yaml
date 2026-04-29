@@ -33,12 +33,10 @@ spec:
 
               echo "Starting initial Confluence search indexing at $(date)"
 
-              # Trigger Confluence indexing
+              # Trigger Confluence indexing using Backstage Scheduler API
               RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-                "http://backstage-developer-hub:7007/api/search/refresh" \
-                -H "Content-Type: application/json" \
-                -H "Authorization: Bearer ${BACKEND_SECRET}" \
-                -d '{"type":"confluence"}')
+                "http://backstage-developer-hub:7007/api/search/.backstage/scheduler/v1/tasks/search_index_confluence/trigger" \
+                -H "Authorization: Bearer ${BACKEND_SECRET}")
 
               HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
               BODY=$(echo "$RESPONSE" | head -n-1)
@@ -49,20 +47,16 @@ spec:
               if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 202 ]; then
                 echo "Initial Confluence indexing triggered successfully"
 
-                # Also trigger catalog and techdocs indexing
+                # Also trigger catalog and techdocs indexing using Scheduler API
                 echo "Triggering catalog indexing..."
                 curl -s -X POST \
-                  "http://backstage-developer-hub:7007/api/search/refresh" \
-                  -H "Content-Type: application/json" \
-                  -H "Authorization: Bearer ${BACKEND_SECRET}" \
-                  -d '{"type":"software-catalog"}'
+                  "http://backstage-developer-hub:7007/api/search/.backstage/scheduler/v1/tasks/search_index_software_catalog/trigger" \
+                  -H "Authorization: Bearer ${BACKEND_SECRET}"
 
                 echo "Triggering techdocs indexing..."
                 curl -s -X POST \
-                  "http://backstage-developer-hub:7007/api/search/refresh" \
-                  -H "Content-Type: application/json" \
-                  -H "Authorization: Bearer ${BACKEND_SECRET}" \
-                  -d '{"type":"techdocs"}'
+                  "http://backstage-developer-hub:7007/api/search/.backstage/scheduler/v1/tasks/search_index_techdocs/trigger" \
+                  -H "Authorization: Bearer ${BACKEND_SECRET}"
 
                 exit 0
               else
