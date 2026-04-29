@@ -27,10 +27,9 @@ data:
         disabled: false
         integrity: 'sha512-buf1Z/mnr+cyMRwqkzsPMVthz+a6UKeOUrmpo+2/44UWBhP482J/eXwnjBAr7j6303o29+DRy4tnNlMu9snGKQ=='
 
-      # Confluence Search Backend Module (using NPM package instead of OCI wrapper)
-      - package: '@backstage-community/plugin-search-backend-module-confluence-collator'
-        disabled: false
-        integrity: 'sha512-MYwF2RjQk5xjf5fAqsOunQy2bKPXmkwXpv7MlJ7EI0cqx7F5GnYrKmDuDrM8jRSs4kHWx9+gUqn3tVcAFuPthw=='                                                                                                                                                    
+      # Confluence Search Backend Module
+      - package: oci://quay.io/rh-ee-sigreen/backstage-plugin-confluence-collator:0.17.2!backstage-plugin-search-backend-module-confluence-collator-wrapper
+        disabled: false                                                                                                                                                    
 
 
       # MCP Server plugins
