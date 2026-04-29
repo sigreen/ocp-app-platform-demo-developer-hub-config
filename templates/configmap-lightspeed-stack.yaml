@@ -31,6 +31,7 @@ data:
     - name: mcp::backstage
       provider_id: model-context-protocol
       url: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
-    shields:
-      input_shields: []  # Disable question validity shield
-      output_shields: []
+    agent_config:
+      shields:
+        input_shields: []  # Disable question validity shield
+        output_shields: []
