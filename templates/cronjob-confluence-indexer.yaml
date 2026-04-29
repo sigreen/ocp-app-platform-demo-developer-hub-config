@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: confluence-search-indexer
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: backstage
+    app.kubernetes.io/component: search-indexer
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  # Run every 2 hours to match the Confluence collator schedule
+  schedule: "7 */2 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: backstage
+            app.kubernetes.io/component: search-indexer
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: default
+          containers:
+            - name: confluence-indexer
+              image: registry.redhat.io/ubi9/ubi-minimal:latest
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  set -e
+                  echo "Starting Confluence search indexing at $(date)"
+
+                  # Trigger Confluence indexing
+                  RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+                    "http://backstage-developer-hub:7007/api/search/refresh" \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Bearer ${BACKEND_SECRET}" \
+                    -d '{"type":"confluence"}')
+
+                  HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+                  BODY=$(echo "$RESPONSE" | head -n-1)
+
+                  echo "HTTP Response Code: $HTTP_CODE"
+                  echo "Response Body: $BODY"
+
+                  if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 202 ]; then
+                    echo "Confluence indexing triggered successfully"
+                    exit 0
+                  else
+                    echo "Failed to trigger Confluence indexing"
+                    exit 1
+                  fi
+              env:
+                - name: BACKEND_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: backend-secret
+                      key: BACKEND_SECRET
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
