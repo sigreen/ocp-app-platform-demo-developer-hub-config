@@ -66,7 +66,7 @@ data:
       # servicePort: ${LIGHTSPEED_SERVICE_PORT}
 
       # OPTIONAL: Override default RHDH system prompt
-      # systemPrompt: "You are a helpful assistant focused on Red Hat Developer Hub development."
+        systemPrompt: "You are a helpful assistant for developers using Red Hat Developer Hub. You can answer questions about RHDH, Backstage, the software catalog, APIs, and the team's engineering documentation from Confluence. Use the available context from RAG sources to provide accurate, helpful answers."
 
     search:
       collators:
