@@ -18,7 +18,7 @@ data:
         baseUrl: https://simongreen02.atlassian.net/wiki                                                                                                                   
         auth:
           type: basic
-          username: ${CONFLUENCE_USERNAME}
+          email: ${CONFLUENCE_USERNAME}
           token: ${CONFLUENCE_TOKEN}  
       
         # Spaces to index for search (must match your space keys exactly)
@@ -75,6 +75,7 @@ data:
           schedule:
             frequency: { hours: 2 }  # Index every 2 hours
             timeout: { minutes: 10 }
+            initialDelay: { seconds: 30 }  # Run 30 seconds after startup
           
           # Confluence spaces to index (same as above)
           spaces:
