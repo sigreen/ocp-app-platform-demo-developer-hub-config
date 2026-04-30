@@ -32,13 +32,7 @@ data:
       provider_id: model-context-protocol
       url: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
 
-      # NOTE: Atlassian remote MCP server is not supported
-      # Lightspeed Core doesn't support OAuth authentication for MCP servers
-      # The following configuration would cause validation errors:
-      # - transport: sse
-      # - auth: oauth
-      # - config: cloud_id
-      #
-      # To use Atlassian/Confluence integration, you would need to:
-      # 1. Deploy a local MCP proxy that handles OAuth authentication
-      # 2. Or use the Backstage Confluence plugin instead
+    # Atlassian MCP via Custom Python Proxy                                                                                                                              
+    - name: mcp::atlassian                                                                                                                                               
+      provider_id: model-context-protocol                                                                                                                                
+      url: http://atlassian-mcp-proxy-custom.toolhive-system.svc.cluster.local:8080
