@@ -154,9 +154,13 @@ data:
       description: "Only use for questions specifically about Red Hat Developer Hub (RHDH). Searches technical documentation for RHDH installation, discovery, configuration, release, upgrade, control access, integration, observability, and extending with plugins. Do not use for any other topic outside RHDH."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::backstage
+      mcp_endpoint:
+        uri: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
       description: "Use for questions about the software catalog, components, APIs, resources, systems, domains, locations, and users in Backstage/RHDH. Can query catalog entities and retrieve TechDocs documentation."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::atlassian
+      mcp_endpoint:
+        uri: http://atlassian-mcp-proxy-custom.toolhive-system.svc.cluster.local:8080/v1/sse
       description: "Use for searching Confluence pages, Jira issues, and other Atlassian resources. Can search documentation, create/update issues, and query project information."
     vector_dbs:
     - embedding_dimension: 768
