@@ -46,6 +46,8 @@ spec:
                     value: vllm
                   - name: VALIDATION_MODEL_NAME
                     value: qwen3-14b
+                  - name: PYTHONPATH
+                    value: /app-root/config/providers.d/inline/tool_runtime:${PYTHONPATH}
                 envFrom:
                   - secretRef:
                       name: llama-stack-secrets

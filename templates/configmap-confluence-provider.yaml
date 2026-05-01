@@ -8,6 +8,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
 data:
+  __init__.py: ""
   confluence_tools.py: |
     """
     Confluence Tool Provider for Llama Stack
