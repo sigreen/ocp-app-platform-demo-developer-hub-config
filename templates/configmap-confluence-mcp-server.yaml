@@ -1,0 +1,139 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: confluence-mcp-server
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: confluence-mcp
+data:
+  confluence_mcp_http.py: |
+    #!/usr/bin/env python3
+    """
+    HTTP wrapper for Confluence MCP Server
+    Exposes Confluence search via simple HTTP endpoints for Lightspeed
+    """
+    import os
+    import json
+    from flask import Flask, request, jsonify
+    from atlassian import Confluence
+
+    app = Flask(__name__)
+
+    # Initialize Confluence client
+    confluence = Confluence(
+        url=os.getenv("CONFLUENCE_URL"),
+        username=os.getenv("CONFLUENCE_USERNAME"),
+        password=os.getenv("CONFLUENCE_API_TOKEN"),
+        cloud=True
+    )
+
+    @app.route('/health', methods=['GET'])
+    def health():
+        """Health check endpoint"""
+        return jsonify({"status": "healthy", "service": "confluence-mcp"}), 200
+
+    @app.route('/tools', methods=['GET'])
+    def list_tools():
+        """List available tools"""
+        tools = [
+            {
+                "name": "search_confluence",
+                "description": "Search Confluence pages using CQL. Returns page titles, IDs, URLs, and excerpts.",
+                "parameters": {
+                    "query": {"type": "string", "required": True, "description": "Search query text"},
+                    "limit": {"type": "integer", "required": False, "default": 10, "description": "Max results"}
+                }
+            },
+            {
+                "name": "get_page_content",
+                "description": "Get full content of a Confluence page by ID",
+                "parameters": {
+                    "page_id": {"type": "string", "required": True, "description": "Page ID"}
+                }
+            },
+            {
+                "name": "get_page_summary",
+                "description": "Get page summary (title, URL, last modified)",
+                "parameters": {
+                    "page_id": {"type": "string", "required": True, "description": "Page ID"}
+                }
+            }
+        ]
+        return jsonify({"tools": tools}), 200
+
+    @app.route('/search', methods=['POST'])
+    def search_confluence():
+        """Search Confluence pages"""
+        try:
+            data = request.get_json()
+            query = data.get('query', '')
+            limit = data.get('limit', 10)
+
+            if not query:
+                return jsonify({"error": "Query parameter is required"}), 400
+
+            # Build CQL query
+            cql = f'text ~ "{query}"' if not query.startswith(("text ~", "title ~")) else query
+            results = confluence.cql(cql, limit=limit)
+
+            pages = []
+            for result in results.get("results", []):
+                content = result.get("content", {})
+                pages.append({
+                    "id": content.get("id"),
+                    "title": content.get("title"),
+                    "url": f"{os.getenv('CONFLUENCE_URL')}/wiki{content.get('_links', {}).get('webui', '')}",
+                    "space": content.get("space", {}).get("name", ""),
+                    "excerpt": result.get("excerpt", "")
+                })
+
+            return jsonify({
+                "total": results.get("totalSize", 0),
+                "pages": pages
+            }), 200
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    @app.route('/page/<page_id>', methods=['GET'])
+    def get_page_content(page_id):
+        """Get full page content"""
+        try:
+            page = confluence.get_page_by_id(page_id, expand="body.storage,version,space")
+
+            return jsonify({
+                "id": page.get("id"),
+                "title": page.get("title"),
+                "space": page.get("space", {}).get("name"),
+                "url": f"{os.getenv('CONFLUENCE_URL')}/wiki{page.get('_links', {}).get('webui', '')}",
+                "content": page.get("body", {}).get("storage", {}).get("value", ""),
+                "version": page.get("version", {}).get("number"),
+                "last_modified": page.get("version", {}).get("when")
+            }), 200
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    @app.route('/page/<page_id>/summary', methods=['GET'])
+    def get_page_summary(page_id):
+        """Get page summary"""
+        try:
+            page = confluence.get_page_by_id(page_id, expand="version,space")
+
+            return jsonify({
+                "id": page.get("id"),
+                "title": page.get("title"),
+                "space": page.get("space", {}).get("name"),
+                "version": page.get("version", {}).get("number"),
+                "last_modified": page.get("version", {}).get("when"),
+                "modified_by": page.get("version", {}).get("by", {}).get("displayName"),
+                "url": f"{os.getenv('CONFLUENCE_URL')}/wiki{page.get('_links', {}).get('webui', '')}"
+            }), 200
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    if __name__ == '__main__':
+        print("Starting Confluence HTTP MCP Server...")
+        print(f"Confluence URL: {os.getenv('CONFLUENCE_URL')}")
+        app.run(host='0.0.0.0', port=8080, debug=False)
