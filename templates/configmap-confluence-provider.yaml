@@ -190,3 +190,8 @@ data:
     provider_type: inline::confluence
     module: confluence_tools
     description: Confluence search and page retrieval tool provider
+    config_class: llama_stack.core.config.ProviderConfig
+    pip_packages:
+      - atlassian-python-api
+    api_dependencies: []
+    optional_api_dependencies: []
