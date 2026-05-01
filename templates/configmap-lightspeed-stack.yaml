@@ -27,6 +27,10 @@ data:
       type: "sqlite"
       sqlite:
         db_path: "/tmp/data/conversations/lcs_cache.db"
+    inference:
+      default_toolgroups:
+        - mcp::atlassian
+        - mcp::backstage
     mcp_servers:
     - name: mcp::backstage
       provider_id: model-context-protocol
