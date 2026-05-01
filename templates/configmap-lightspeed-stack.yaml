@@ -32,7 +32,8 @@ data:
       provider_id: model-context-protocol
       url: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
 
-    # Atlassian MCP via Custom Python Proxy                                                                                                                              
-    - name: mcp::atlassian                                                                                                                                               
-      provider_id: model-context-protocol                                                                                                                                
-      url: http://atlassian-mcp-proxy-custom.toolhive-system.svc.cluster.local:8080
+    # Atlassian MCP via Custom Python Proxy
+    # Custom proxy handles Atlassian API token authentication and SSE transport
+    - name: mcp::atlassian
+      provider_id: model-context-protocol
+      url: http://atlassian-mcp-proxy-custom.toolhive-system.svc.cluster.local:8080/v1/sse
