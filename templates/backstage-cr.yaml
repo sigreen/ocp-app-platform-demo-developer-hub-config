@@ -47,7 +47,7 @@ spec:
                   - name: VALIDATION_MODEL_NAME
                     value: qwen3-14b
                   - name: PYTHONPATH
-                    value: /app-root/config/providers.d/inline/tool_runtime
+                    value: /app-root/config/providers.d/inline/tool_runtime:/app-root/confluence-deps
                 envFrom:
                   - secretRef:
                       name: llama-stack-secrets
@@ -69,6 +69,8 @@ spec:
                     subPath: run.yaml
                   - mountPath: /app-root/config/providers.d/inline/tool_runtime
                     name: confluence-tool-provider
+                  - mountPath: /app-root/confluence-deps
+                    name: confluence-deps
               - image: 'quay.io/lightspeed-core/lightspeed-stack:dev-20251021-ee9f08f'
                 name: lightspeed-core
                 volumeMounts:
@@ -82,6 +84,15 @@ spec:
                   - mountPath: /tmp/data/conversations
                     name: shared-storage
             initContainers:
+              - name: install-confluence-deps
+                image: 'quay.io/redhat-ai-dev/llama-stack:0.1.1'
+                command:
+                  - "sh"
+                  - "-c"
+                  - "pip install atlassian-python-api && cp -r /app-root/.venv/lib*/python*/site-packages/atlassian* /deps/"
+                volumeMounts:
+                  - mountPath: /deps
+                    name: confluence-deps
               - name: init-rag-data
                 image: 'quay.io/redhat-ai-dev/rag-content:release-1.8-lcs'
                 command:
@@ -105,6 +116,8 @@ spec:
               - configMap:
                   name: confluence-tool-provider
                 name: confluence-tool-provider
+              - emptyDir: {}
+                name: confluence-deps
               - emptyDir: {}
                 name: shared-storage
               - emptyDir: {}
