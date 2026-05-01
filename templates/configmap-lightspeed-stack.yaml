@@ -27,6 +27,11 @@ data:
       type: "sqlite"
       sqlite:
         db_path: "/tmp/data/conversations/lcs_cache.db"
+    agents:
+      default_toolgroups:
+        - builtin::rag
+        - mcp::atlassian
+        - mcp::backstage
     mcp_servers:
     - name: mcp::backstage
       provider_id: model-context-protocol
