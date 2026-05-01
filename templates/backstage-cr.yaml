@@ -89,7 +89,7 @@ spec:
                 command:
                   - "sh"
                   - "-c"
-                  - "pip install atlassian-python-api && cp -r /app-root/.venv/lib*/python*/site-packages/atlassian* /deps/"
+                  - "pip install --target=/deps atlassian-python-api"
                 volumeMounts:
                   - mountPath: /deps
                     name: confluence-deps
