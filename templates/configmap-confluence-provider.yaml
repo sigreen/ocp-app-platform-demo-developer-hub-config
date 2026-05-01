@@ -1,0 +1,192 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: confluence-tool-provider
+  namespace: rhdh
+  labels:
+    app.kubernetes.io/name: confluence-provider
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  confluence_tools.py: |
+    """
+    Confluence Tool Provider for Llama Stack
+    Provides direct integration with Confluence Cloud API
+    """
+    import os
+    import re
+    from typing import Any, Dict, List
+    from llama_stack.apis.tools import ToolDef, ToolParameter, ToolRuntime
+    from atlassian import Confluence
+
+
+    class ConfluenceToolProvider(ToolRuntime):
+        """Tool provider for Confluence search and retrieval"""
+
+        def __init__(self, config: Dict[str, Any]):
+            self.config = config
+            self.confluence = Confluence(
+                url=os.getenv("CONFLUENCE_URL"),
+                username=os.getenv("CONFLUENCE_USERNAME"),
+                password=os.getenv("CONFLUENCE_API_TOKEN"),
+                cloud=True
+            )
+
+        async def initialize(self):
+            """Initialize the provider"""
+            pass
+
+        async def shutdown(self):
+            """Shutdown the provider"""
+            pass
+
+        async def list_tools(self) -> List[ToolDef]:
+            """List available Confluence tools"""
+            return [
+                ToolDef(
+                    name="search_confluence",
+                    description="Search Confluence pages using text queries. Returns page titles, IDs, URLs, and excerpts. Use this to find documentation, guides, and technical specifications stored in Confluence.",
+                    parameters=[
+                        ToolParameter(
+                            name="query",
+                            parameter_type="string",
+                            description="Search query text (e.g., 'API security', 'deployment guide')",
+                            required=True
+                        ),
+                        ToolParameter(
+                            name="limit",
+                            parameter_type="int",
+                            description="Maximum number of results to return",
+                            required=False,
+                            default=10
+                        )
+                    ]
+                ),
+                ToolDef(
+                    name="get_confluence_page",
+                    description="Get the full content of a specific Confluence page by ID",
+                    parameters=[
+                        ToolParameter(
+                            name="page_id",
+                            parameter_type="string",
+                            description="The ID of the Confluence page",
+                            required=True
+                        )
+                    ]
+                )
+            ]
+
+        async def run_tool(self, tool_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
+            """Execute a tool"""
+
+            if tool_name == "search_confluence":
+                return await self._search_confluence(
+                    args.get("query", ""),
+                    args.get("limit", 10)
+                )
+            elif tool_name == "get_confluence_page":
+                return await self._get_page(args.get("page_id"))
+            else:
+                return {"error": f"Unknown tool: {tool_name}"}
+
+        async def _search_confluence(self, query: str, limit: int = 10) -> Dict[str, Any]:
+            """Search Confluence pages"""
+            try:
+                # Build CQL query
+                cql = f'text ~ "{query}"' if not query.startswith(("text ~", "title ~")) else query
+
+                # Execute search
+                results = self.confluence.cql(cql, limit=limit)
+
+                # Format results
+                pages = []
+                for result in results.get("results", []):
+                    content = result.get("content", {})
+                    pages.append({
+                        "id": content.get("id"),
+                        "title": content.get("title"),
+                        "url": f"{os.getenv('CONFLUENCE_URL')}/wiki{content.get('_links', {}).get('webui', '')}",
+                        "space": content.get("space", {}).get("name", ""),
+                        "excerpt": result.get("excerpt", "")[:300]  # Truncate excerpts
+                    })
+
+                # Format response for LLM
+                if pages:
+                    response = f"Found {results.get('totalSize', 0)} Confluence pages:\n\n"
+                    for i, page in enumerate(pages, 1):
+                        response += f"{i}. **{page['title']}**\n"
+                        response += f"   Space: {page['space']}\n"
+                        response += f"   URL: {page['url']}\n"
+                        if page['excerpt']:
+                            # Clean HTML tags from excerpt
+                            clean_excerpt = re.sub('<.*?>', '', page['excerpt'])
+                            response += f"   Preview: {clean_excerpt[:200]}...\n"
+                        response += "\n"
+
+                    return {
+                        "success": True,
+                        "message": response,
+                        "data": {"total": results.get("totalSize", 0), "pages": pages}
+                    }
+                else:
+                    return {
+                        "success": True,
+                        "message": f"No Confluence pages found for query: '{query}'",
+                        "data": {"total": 0, "pages": []}
+                    }
+
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": f"Error searching Confluence: {str(e)}"
+                }
+
+        async def _get_page(self, page_id: str) -> Dict[str, Any]:
+            """Get Confluence page content"""
+            try:
+                page = self.confluence.get_page_by_id(
+                    page_id,
+                    expand="body.storage,version,space"
+                )
+
+                # Clean HTML from content
+                content = page.get("body", {}).get("storage", {}).get("value", "")
+                clean_content = re.sub('<.*?>', '', content)
+
+                # Format response
+                response = f"**{page.get('title')}**\n\n"
+                response += f"Space: {page.get('space', {}).get('name')}\n"
+                response += f"Version: {page.get('version', {}).get('number')}\n"
+                response += f"Last Modified: {page.get('version', {}).get('when')}\n"
+                response += f"URL: {os.getenv('CONFLUENCE_URL')}/wiki{page.get('_links', {}).get('webui', '')}\n\n"
+                response += f"Content:\n{clean_content[:2000]}"  # Truncate long content
+                if len(clean_content) > 2000:
+                    response += "\n\n(Content truncated - visit URL for full page)"
+
+                return {
+                    "success": True,
+                    "message": response,
+                    "data": {
+                        "id": page.get("id"),
+                        "title": page.get("title"),
+                        "content": clean_content
+                    }
+                }
+
+            except Exception as e:
+                return {
+                    "success": False,
+                    "error": f"Error retrieving page {page_id}: {str(e)}"
+                }
+
+
+    # Provider factory function
+    def get_provider_impl(config: Dict[str, Any], deps) -> ConfluenceToolProvider:
+        """Factory function to create the provider"""
+        return ConfluenceToolProvider(config)
+
+  confluence.yaml: |
+    api: tool_runtime
+    provider_type: inline::confluence
+    module: confluence_tools
+    description: Confluence search and page retrieval tool provider

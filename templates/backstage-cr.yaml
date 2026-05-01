@@ -49,6 +49,8 @@ spec:
                 envFrom:
                   - secretRef:
                       name: llama-stack-secrets
+                  - secretRef:
+                      name: confluence-mcp-credentials
                 image: 'quay.io/redhat-ai-dev/llama-stack:0.1.1'
                 name: llama-stack
                 volumeMounts:
@@ -63,6 +65,12 @@ spec:
                   - mountPath: /app-root/run.yaml
                     name: llama-stack-run
                     subPath: run.yaml
+                  - mountPath: /app-root/config/providers.d/inline/tool_runtime/confluence.yaml
+                    name: confluence-tool-provider
+                    subPath: confluence.yaml
+                  - mountPath: /app-root/config/providers.d/inline/tool_runtime/confluence_tools.py
+                    name: confluence-tool-provider
+                    subPath: confluence_tools.py
               - image: 'quay.io/lightspeed-core/lightspeed-stack:dev-20251021-ee9f08f'
                 name: lightspeed-core
                 volumeMounts:
@@ -96,6 +104,9 @@ spec:
               - configMap:
                   name: llama-stack-run
                 name: llama-stack-run
+              - configMap:
+                  name: confluence-tool-provider
+                name: confluence-tool-provider
               - emptyDir: {}
                 name: shared-storage
               - emptyDir: {}
