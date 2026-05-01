@@ -47,7 +47,7 @@ spec:
                   - name: VALIDATION_MODEL_NAME
                     value: qwen3-14b
                   - name: PYTHONPATH
-                    value: /app-root/config/providers.d/inline/tool_runtime:${PYTHONPATH}
+                    value: /app-root/config/providers.d/inline/tool_runtime
                 envFrom:
                   - secretRef:
                       name: llama-stack-secrets
@@ -67,12 +67,8 @@ spec:
                   - mountPath: /app-root/run.yaml
                     name: llama-stack-run
                     subPath: run.yaml
-                  - mountPath: /app-root/config/providers.d/inline/tool_runtime/confluence.yaml
+                  - mountPath: /app-root/config/providers.d/inline/tool_runtime
                     name: confluence-tool-provider
-                    subPath: confluence.yaml
-                  - mountPath: /app-root/config/providers.d/inline/tool_runtime/confluence_tools.py
-                    name: confluence-tool-provider
-                    subPath: confluence_tools.py
               - image: 'quay.io/lightspeed-core/lightspeed-stack:dev-20251021-ee9f08f'
                 name: lightspeed-core
                 volumeMounts:
