@@ -47,7 +47,7 @@ data:
             """Shutdown the provider"""
             pass
 
-        async def list_runtime_tools(self) -> List[ToolDef]:
+        async def list_runtime_tools(self):
             """List available Confluence tools"""
             return [
                 ToolDef(
@@ -83,7 +83,7 @@ data:
                 )
             ]
 
-        async def invoke_tool(self, tool_name: str, kwargs: Dict[str, Any]) -> Any:
+        async def invoke_tool(self, tool_name: str, kwargs: Dict[str, Any]):
             """Execute a tool"""
 
             if tool_name == "search_confluence":
