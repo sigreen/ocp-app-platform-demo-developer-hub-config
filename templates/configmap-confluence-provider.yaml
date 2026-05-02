@@ -188,9 +188,11 @@ data:
 
 
     # Provider factory function
-    def get_provider_impl(config: Dict[str, Any], deps) -> ConfluenceToolProvider:
+    async def get_provider_impl(config: Dict[str, Any], deps) -> ConfluenceToolProvider:
         """Factory function to create the provider"""
-        return ConfluenceToolProvider(config)
+        provider = ConfluenceToolProvider(config)
+        await provider.initialize()
+        return provider
 
   confluence.yaml: |
     api: tool_runtime
