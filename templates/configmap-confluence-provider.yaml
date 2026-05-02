@@ -16,7 +16,7 @@ data:
     """
     import os
     import re
-    from typing import Any, Dict, List
+    from typing import Any, Dict, List, Optional
     from llama_stack.apis.tools import ToolDef, ToolParameter, ToolRuntime
     from atlassian import Confluence
 
@@ -47,7 +47,7 @@ data:
             """Shutdown the provider"""
             pass
 
-        async def list_runtime_tools(self, tool_group_id: str = None):
+        async def list_runtime_tools(self, tool_group_id: Optional[str] = None):
             """List available Confluence tools"""
             return [
                 ToolDef(
