@@ -157,6 +157,9 @@ data:
       description: "Only use for questions specifically about Red Hat Developer Hub (RHDH). Searches technical documentation for RHDH installation, discovery, configuration, release, upgrade, control access, integration, observability, and extending with plugins. Do not use for any other topic outside RHDH."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::backstage
+      mcp_endpoint:
+        uri: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
+      description: "Use for questions about the software catalog, components, APIs, resources, systems, domains, locations, and users in Backstage/RHDH. Can query catalog entities and retrieve TechDocs documentation."
     - provider_id: confluence
       toolgroup_id: builtin::confluence
       description: "Use for searching Confluence documentation and knowledge base. Search pages by text queries, retrieve full page content. Best for finding company documentation, guides, and technical specifications stored in Confluence."
