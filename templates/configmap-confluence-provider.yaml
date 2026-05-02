@@ -17,7 +17,14 @@ data:
     import os
     import re
     from typing import Any, Dict, List, Optional
-    from llama_stack.apis.tools import ToolDef, ToolParameter, ToolRuntime
+    from llama_stack.apis.common.content_types import URL
+    from llama_stack.apis.tools import (
+        ListToolDefsResponse,
+        ToolDef,
+        ToolInvocationResult,
+        ToolParameter,
+        ToolRuntime,
+    )
     from atlassian import Confluence
 
 
@@ -47,54 +54,69 @@ data:
             """Shutdown the provider"""
             pass
 
-        async def list_runtime_tools(self):
+        async def list_runtime_tools(
+            self, tool_group_id: str | None = None, mcp_endpoint: URL | None = None
+        ) -> ListToolDefsResponse:
             """List available Confluence tools"""
-            return [
-                ToolDef(
-                    name="search_confluence",
-                    description="Search Confluence pages using text queries. Returns page titles, IDs, URLs, and excerpts. Use this to find documentation, guides, and technical specifications stored in Confluence.",
-                    parameters=[
-                        ToolParameter(
-                            name="query",
-                            parameter_type="string",
-                            description="Search query text (e.g., 'API security', 'deployment guide')",
-                            required=True
-                        ),
-                        ToolParameter(
-                            name="limit",
-                            parameter_type="int",
-                            description="Maximum number of results to return",
-                            required=False,
-                            default=10
-                        )
-                    ]
-                ),
-                ToolDef(
-                    name="get_confluence_page",
-                    description="Get the full content of a specific Confluence page by ID",
-                    parameters=[
-                        ToolParameter(
-                            name="page_id",
-                            parameter_type="string",
-                            description="The ID of the Confluence page",
-                            required=True
-                        )
-                    ]
-                )
-            ]
+            return ListToolDefsResponse(
+                data=[
+                    ToolDef(
+                        name="search_confluence",
+                        description="Search Confluence pages using text queries. Returns page titles, IDs, URLs, and excerpts. Use this to find documentation, guides, and technical specifications stored in Confluence.",
+                        parameters=[
+                            ToolParameter(
+                                name="query",
+                                parameter_type="string",
+                                description="Search query text (e.g., 'API security', 'deployment guide')",
+                                required=True
+                            ),
+                            ToolParameter(
+                                name="limit",
+                                parameter_type="int",
+                                description="Maximum number of results to return",
+                                required=False,
+                                default=10
+                            )
+                        ]
+                    ),
+                    ToolDef(
+                        name="get_confluence_page",
+                        description="Get the full content of a specific Confluence page by ID",
+                        parameters=[
+                            ToolParameter(
+                                name="page_id",
+                                parameter_type="string",
+                                description="The ID of the Confluence page",
+                                required=True
+                            )
+                        ]
+                    )
+                ]
+            )
 
-        async def invoke_tool(self, tool_name: str, kwargs: Dict[str, Any]):
+        async def invoke_tool(self, tool_name: str, kwargs: dict[str, Any]) -> ToolInvocationResult:
             """Execute a tool"""
 
             if tool_name == "search_confluence":
-                return await self._search_confluence(
+                result = await self._search_confluence(
                     kwargs.get("query", ""),
                     kwargs.get("limit", 10)
                 )
+                return ToolInvocationResult(
+                    content=result.get("message", ""),
+                    metadata=result.get("data", {})
+                )
             elif tool_name == "get_confluence_page":
-                return await self._get_page(kwargs.get("page_id"))
+                result = await self._get_page(kwargs.get("page_id"))
+                return ToolInvocationResult(
+                    content=result.get("message", ""),
+                    metadata=result.get("data", {})
+                )
             else:
-                return {"error": f"Unknown tool: {tool_name}"}
+                return ToolInvocationResult(
+                    content=f"Unknown tool: {tool_name}",
+                    metadata={"error": True}
+                )
 
         async def _search_confluence(self, query: str, limit: int = 10) -> Dict[str, Any]:
             """Search Confluence pages"""
