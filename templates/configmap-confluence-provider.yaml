@@ -17,8 +17,14 @@ data:
     import os
     import re
     from typing import Any, Dict, List
+    from pydantic import BaseModel
     from llama_stack.apis.tools import ToolDef, ToolParameter, ToolRuntime
     from atlassian import Confluence
+
+
+    class ConfluenceProviderConfig(BaseModel):
+        """Configuration for Confluence provider"""
+        pass
 
 
     class ConfluenceToolProvider(ToolRuntime):
@@ -191,7 +197,7 @@ data:
     provider_type: inline::confluence
     module: confluence_tools
     description: Confluence search and page retrieval tool provider
-    config_class: llama_stack.core.config.ProviderConfig
+    config_class: confluence_tools.ConfluenceProviderConfig
     pip_packages:
       - atlassian-python-api
     api_dependencies: []
