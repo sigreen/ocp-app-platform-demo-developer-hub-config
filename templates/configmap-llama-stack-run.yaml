@@ -154,15 +154,15 @@ data:
     tool_groups:
     - provider_id: confluence
       toolgroup_id: builtin::confluence
-      description: "Use this tool when the user explicitly mentions 'Confluence' OR asks for general company documentation, best practices, guides, or technical specifications. This searches the company's Confluence knowledge base. Use this for ANY non-RHDH documentation searches."
+      description: "Primary documentation search tool. Use for ALL general documentation including: API security, best practices, deployment guides, architecture patterns, technical specifications, company policies, and any documentation queries. This searches the company's Confluence knowledge base. DO NOT use builtin::rag unless the question is specifically about RHDH product installation or configuration."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::backstage
       mcp_endpoint:
         uri: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
       description: "Use for questions about the software catalog, components, APIs, resources, systems, domains, locations, and users in Backstage/RHDH. Can query catalog entities and retrieve TechDocs documentation."
-    #- provider_id: rag-runtime
-    #  toolgroup_id: builtin::rag
-    #  description: "ONLY use for questions SPECIFICALLY about Red Hat Developer Hub (RHDH) product documentation - installation, configuration, plugins, etc. Do NOT use for general best practices, company documentation, or non-RHDH topics."
+    - provider_id: rag-runtime
+      toolgroup_id: builtin::rag
+      description: "EXTREMELY RESTRICTED: ONLY for Red Hat Developer Hub (RHDH) product installation and configuration questions (e.g., 'How do I install RHDH?', 'How do I configure RHDH plugins?'). DO NOT use for: API security, best practices, deployment patterns, architecture, or any general documentation. Use builtin::confluence instead."
     vector_dbs:
     - embedding_dimension: 768
       embedding_model: sentence-transformers/all-mpnet-base-v2
