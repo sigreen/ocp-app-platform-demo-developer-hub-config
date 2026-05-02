@@ -31,8 +31,3 @@ data:
     - name: mcp::backstage
       provider_id: model-context-protocol
       url: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
-
-    # Confluence MCP Server - Direct search integration
-    - name: mcp::confluence
-      provider_id: model-context-protocol
-      url: http://confluence-mcp-server.rhdh.svc.cluster.local:8080
