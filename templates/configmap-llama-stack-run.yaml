@@ -160,9 +160,9 @@ data:
       mcp_endpoint:
         uri: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
       description: "Use for questions about the software catalog, components, APIs, resources, systems, domains, locations, and users in Backstage/RHDH. Can query catalog entities and retrieve TechDocs documentation."
-    - provider_id: rag-runtime
-      toolgroup_id: builtin::rag
-      description: "ONLY use for questions SPECIFICALLY about Red Hat Developer Hub (RHDH) product documentation - installation, configuration, plugins, etc. Do NOT use for general best practices, company documentation, or non-RHDH topics."
+    #- provider_id: rag-runtime
+    #  toolgroup_id: builtin::rag
+    #  description: "ONLY use for questions SPECIFICALLY about Red Hat Developer Hub (RHDH) product documentation - installation, configuration, plugins, etc. Do NOT use for general best practices, company documentation, or non-RHDH topics."
     vector_dbs:
     - embedding_dimension: 768
       embedding_model: sentence-transformers/all-mpnet-base-v2
