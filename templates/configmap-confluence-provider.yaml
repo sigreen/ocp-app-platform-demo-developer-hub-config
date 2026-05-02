@@ -54,6 +54,14 @@ data:
             """Shutdown the provider"""
             pass
 
+        async def register_toolgroup(self, toolgroup):
+            """Register a tool group"""
+            pass
+
+        async def unregister_toolgroup(self, toolgroup_id: str):
+            """Unregister a tool group"""
+            return
+
         async def list_runtime_tools(self, tool_group_id=None, mcp_endpoint=None) -> ListToolDefsResponse:
             """List available Confluence tools"""
             return ListToolDefsResponse(
