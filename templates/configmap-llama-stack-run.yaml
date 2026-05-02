@@ -154,17 +154,17 @@ data:
     tool_groups:
     - provider_id: confluence
       toolgroup_id: builtin::confluence
-      description: "Primary documentation search tool. Use for ALL general documentation including: API security, best practices, deployment guides, architecture patterns, technical specifications, company policies, and any documentation queries. This searches the company's Confluence knowledge base. DO NOT use builtin::rag unless the question is specifically about RHDH product installation or configuration."
+      description: "Primary documentation search tool for ALL general documentation including: API security, best practices, deployment guides, architecture patterns, technical specifications, company policies, and any documentation queries. This searches the company's Confluence knowledge base."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::backstage
       mcp_endpoint:
         uri: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
       description: "Use for questions about the software catalog, components, APIs, resources, systems, domains, locations, and users in Backstage/RHDH. Can query catalog entities and retrieve TechDocs documentation."
-    - provider_id: rag-runtime
-      toolgroup_id: builtin::rag
-      description: "EXTREMELY RESTRICTED: ONLY for Red Hat Developer Hub (RHDH) product installation and configuration questions (e.g., 'How do I install RHDH?', 'How do I configure RHDH plugins?'). DO NOT use for: API security, best practices, deployment patterns, architecture, or any general documentation. Use builtin::confluence instead."
-    vector_dbs:
-    - embedding_dimension: 768
-      embedding_model: sentence-transformers/all-mpnet-base-v2
-      provider_id: rhdh-docs
-      vector_db_id: rhdh-product-docs-1_8
+    #- provider_id: rag-runtime
+    #  toolgroup_id: builtin::rhdh-docs
+    #  description: "ONLY for Red Hat Developer Hub (RHDH) product installation and configuration questions."
+    #vector_dbs:
+    #- embedding_dimension: 768
+    #  embedding_model: sentence-transformers/all-mpnet-base-v2
+    #  provider_id: rhdh-docs
+    #  vector_db_id: rhdh-product-docs-1_8
