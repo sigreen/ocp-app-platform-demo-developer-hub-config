@@ -47,7 +47,7 @@ data:
             """Shutdown the provider"""
             pass
 
-        async def list_runtime_tools(self):
+        async def list_runtime_tools(self, tool_group_id: str = None):
             """List available Confluence tools"""
             return [
                 ToolDef(
