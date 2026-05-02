@@ -83,16 +83,16 @@ data:
                 )
             ]
 
-        async def invoke_tool(self, tool_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
+        async def invoke_tool(self, tool_name: str, kwargs: Dict[str, Any]) -> Any:
             """Execute a tool"""
 
             if tool_name == "search_confluence":
                 return await self._search_confluence(
-                    args.get("query", ""),
-                    args.get("limit", 10)
+                    kwargs.get("query", ""),
+                    kwargs.get("limit", 10)
                 )
             elif tool_name == "get_confluence_page":
-                return await self._get_page(args.get("page_id"))
+                return await self._get_page(kwargs.get("page_id"))
             else:
                 return {"error": f"Unknown tool: {tool_name}"}
 
