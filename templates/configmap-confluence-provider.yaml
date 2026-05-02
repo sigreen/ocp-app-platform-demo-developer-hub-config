@@ -54,9 +54,7 @@ data:
             """Shutdown the provider"""
             pass
 
-        async def list_runtime_tools(
-            self, tool_group_id: str | None = None, mcp_endpoint: URL | None = None
-        ) -> ListToolDefsResponse:
+        async def list_runtime_tools(self, tool_group_id=None, mcp_endpoint=None) -> ListToolDefsResponse:
             """List available Confluence tools"""
             return ListToolDefsResponse(
                 data=[
@@ -94,7 +92,7 @@ data:
                 ]
             )
 
-        async def invoke_tool(self, tool_name: str, kwargs: dict[str, Any]) -> ToolInvocationResult:
+        async def invoke_tool(self, tool_name, kwargs) -> ToolInvocationResult:
             """Execute a tool"""
 
             if tool_name == "search_confluence":
