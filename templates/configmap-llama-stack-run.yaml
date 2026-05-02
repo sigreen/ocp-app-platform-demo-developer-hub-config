@@ -153,7 +153,7 @@ data:
     shields: []
     tool_groups:
     - provider_id: confluence
-      toolgroup_id: builtin::confluence
+      toolgroup_id: confluence
       description: "Primary documentation search tool for ALL general documentation including: API security, best practices, deployment guides, architecture patterns, technical specifications, company policies, and any documentation queries. This searches the company's Confluence knowledge base."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::backstage
