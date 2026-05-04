@@ -185,6 +185,14 @@ data:
               username: admin
               password: ${ARGOCD_PASSWORD}
 
+    servicenow:
+      # Base URL of your ServiceNow instance
+      baseUrl: ${SERVICENOW_BASE_URL}
+      # ServiceNow admin username
+      username: ${SERVICENOW_USERNAME}
+      # ServiceNow admin password
+      password: ${SERVICENOW_PASSWORD}
+
     kubernetes:
       serviceLocatorMethod:
         type: multiTenant
