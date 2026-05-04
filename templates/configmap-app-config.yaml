@@ -180,7 +180,10 @@ data:
               url: https://{{ .Values.argocd.host }}
               username: admin
               password: ${ARGOCD_PASSWORD}
-
+    servicenow:
+      baseUrl: ${SERVICENOW_BASE_URL}
+      username: ${SERVICENOW_USERNAME}
+      password: ${SERVICENOW_PASSWORD}
     kubernetes:
       serviceLocatorMethod:
         type: multiTenant

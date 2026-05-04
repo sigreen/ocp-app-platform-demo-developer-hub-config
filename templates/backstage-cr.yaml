@@ -28,6 +28,7 @@ spec:
         - name: oauth-client
         - name: backend-secret
         - name: backstage-orchestrator-token
+        - name: servicenow-credentials # Manually created secret, not from ExternalSecret
         - name: confluence-credentials  # Manually created secret, not from ExternalSecret
         - name: atlassian-oauth-credentials  # Manually created secret, not from ExternalSecret
     extraFiles:
