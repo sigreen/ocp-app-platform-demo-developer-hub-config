@@ -31,6 +31,4 @@ data:
     - name: mcp::backstage
       provider_id: model-context-protocol
       url: http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1
-    - name: confluence
-      provider_id: confluence
-      url: http://unused
+    # Confluence uses inline provider in llama-stack, not MCP server
