@@ -31,6 +31,7 @@ spec:
         - name: servicenow-credentials # Manually created secret, not from ExternalSecret
         - name: confluence-credentials  # Manually created secret, not from ExternalSecret
         - name: atlassian-oauth-credentials  # Manually created secret, not from ExternalSecret
+        - name: servicenow-credentials
     extraFiles:
       mountPath: /opt/app-root/src
     replicas: 1
