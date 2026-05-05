@@ -87,12 +87,12 @@ data:
                     ),
                     ToolDef(
                         name="get_confluence_page",
-                        description="Get the full content of a specific Confluence page by ID",
+                        description="Get the full content of a specific Confluence page by ID. Use this when the user asks to read, summarize, view details, or get the content of a specific page. The page_id can be found in search results from search_confluence. This returns the complete page text, which you can then summarize or answer questions about.",
                         parameters=[
                             ToolParameter(
                                 name="page_id",
                                 parameter_type="string",
-                                description="The ID of the Confluence page",
+                                description="The ID of the Confluence page to retrieve (obtained from search_confluence results)",
                                 required=True
                             )
                         ]
