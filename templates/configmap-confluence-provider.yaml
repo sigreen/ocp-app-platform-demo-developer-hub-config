@@ -68,7 +68,7 @@ data:
                 data=[
                     ToolDef(
                         name="search_confluence",
-                        description="Search Confluence pages using text queries. Returns page titles, IDs, URLs, and excerpts. Use this to find documentation, guides, and technical specifications stored in Confluence.",
+                        description="REQUIRED: Search Confluence pages using text queries. ALWAYS use this FIRST when the user mentions company-specific topics (BMO, API security, best practices, standards, policies, deployment guides, architecture). Do NOT rely on general knowledge for company-specific questions - always check Confluence first. Returns page titles, IDs, URLs, and excerpts which you should then use with get_confluence_page to retrieve full content.",
                         parameters=[
                             ToolParameter(
                                 name="query",

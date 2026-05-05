@@ -154,7 +154,7 @@ data:
     tool_groups:
     - provider_id: confluence
       toolgroup_id: confluence
-      description: "Search AND retrieve full content from Confluence documentation. Can search for pages and retrieve complete page content including text, details, and documentation. Use this for ANY questions about company documentation, API security, best practices, deployment guides, architecture patterns, technical specifications, and policies. When users ask to read, summarize, or get details about a specific page, use the get_confluence_page tool with the page ID from search results."
+      description: "MANDATORY: ALWAYS search Confluence FIRST before answering ANY question that mentions: BMO, company-specific requirements, API security, best practices, deployment guides, architecture patterns, technical specifications, policies, or standards. Do NOT generate answers based on general knowledge when company-specific documentation might exist. WORKFLOW: 1) Search Confluence for relevant pages, 2) Retrieve full page content using get_confluence_page with the page_id from search results, 3) Base your answer on the actual Confluence content. If a user asks to create something adhering to company standards (e.g., 'following BMO API security best practices'), you MUST search and read the relevant Confluence pages before generating code or responses."
     - provider_id: model-context-protocol
       toolgroup_id: mcp::backstage
       mcp_endpoint:
