@@ -138,7 +138,7 @@ data:
         - allow: [Component, System, API, Resource, Location, Template, Domain]
       locations:
         - type: url
-          target:  https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/samples/all.yaml
+          target:  https://raw.githubusercontent.com/redhat-appstudio/tssc-dev-multi-ci/main/samples/all.yaml
           rules:
             - allow: [Location, Template]
         - type: url
