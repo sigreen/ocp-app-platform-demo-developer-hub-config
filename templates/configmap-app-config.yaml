@@ -171,6 +171,10 @@ data:
       appLocatorMethods:
         - type: config
           instances:
+            - name: default
+              url: https://{{ .Values.argocd.host }}
+              username: admin
+              password: ${ARGOCD_PASSWORD}
             - name: main
               url: https://{{ .Values.argocd.host }}
               username: admin
