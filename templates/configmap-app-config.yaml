@@ -138,6 +138,10 @@ data:
         - allow: [Component, System, API, Resource, Location, Template, Domain]
       locations:
         - type: url
+          target:  https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/samples/all.yaml
+          rules:
+            - allow: [Location, Template]
+        - type: url
           target: https://github.com/evanshortiss/from-ai-hype-to-platform-reality/blob/main/catalog/catalog-info.yaml
           rules:
             - allow: [Component, System, API, Resource, Location, Template, Domain, User, Group]
